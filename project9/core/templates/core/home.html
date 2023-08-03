@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>count page</h1>
+    <h3 id="ct"></h3>
+    <h3>group name: {{group_name}}</h3>
+    <textarea name="" id="chat-log" cols="30" rows="10"></textarea><br>
+    <input id="chart-message-input" type="text"><br>
+
+    <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+{{groupname|json_script:'group_name'}}
+
+    <script>
+        var groupnames=JSON.parse(document.getElementById('group_name'));
+        console.log(groupnames)
+        
+
+        var ws=new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/'
+            + groupname
+            + '/'
+        )
+
+        ws.onopen=function(){
+            console.log('connection is open')
+        ws.send(JSON.stringify(
+            {'msg':'message send client'} 
+            ))
+        }
+        ws.onmessage=function(event){
+        console.log('message received',event)
+
+        var data=JSON.parse(event.data)
+        console.log(data)
+        document.getElementById("chat-log").value+=(data.message)
+        }
+
+        document.getElementById("submit").onclick=function(event){
+            var messagedom=document.getElementById("chart-message-input")
+            var message=messagedom.value
+            ws.send(JSON.stringify({
+                'msg':message
+            }))
+            messagedom.value='';
+        }
+    </script>
+</body>
+</html>

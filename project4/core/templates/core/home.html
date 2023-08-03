@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>hello</h1>
+    <textarea name="" id="chart" cols="30" rows="10"></textarea><br>
+    <input type="Text" value="" id="chart_input" size="20">
+    <input type="button" value="send" id="submit">
+    <script>
+        const socket = new WebSocket('wss://127.0.0.1:8000/ws/');
+
+        // Connection opened
+        socket.addEventListener('open', function(event) {
+            //socket.send('Hello Server!');
+        });
+
+        // Listen for messages
+            socket.addEventListener('message', function(event) {
+            console.log('Message from server ', event);
+            const data=JSON.parse(event.data)
+            document.querySelector("#chart").value +=(data.msg + '\n')
+        }); 
+
+        
+
+        document.getElementById("submit").onclick = function(event) {
+            const messageinput = (document.getElementById("chart_input"))
+            const message = messageinput.value
+            socket.send(JSON.stringify({
+                'msg': message
+            }))
+            messageinput.value = ''
+
+        }
+    </script>
+</body>
+
+</html>

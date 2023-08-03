@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="group_name"></h1>
+    <textarea name="" id="chart-log" cols="30" rows="10"></textarea><br>
+    <input id="messageinput" type="text"><br>
+    <button type="submit" id="submit" class="btn btn-primary">Submit</button><br>
+    {% comment %} {{groupname|json_script:"group-name"}} {% endcomment %}
+
+    <script>
+        {% comment %} const groupname=json.parse(document.getElementById("group_name").textContent)
+        console.log(groupname) {% endcomment %}
+        var ws = new WebSocket(
+            'ws://'
+            +window.location.host
+            +'/ws/'
+            +group_name
+            +'/'
+        )
+        ws.onmessage=function(event){
+            const data=json.parse(event.data)
+            console.log(data)
+        }
+        document.getElementById('chart-log').value+=data.msg
+    </script>
+</body>
+</html>
